@@ -120,8 +120,18 @@ export default function App() {
         </main>
 
         {/* Fixed footer with greyish background */}
-        <footer className="w-full pt-4 pb-2 sm:pt-6 sm:pb-4 text-center text-xs text-muted-foreground/50 animate-fade-in bg-background/95 backdrop-blur-sm border-t border-border/20">
+        <footer className="w-full pt-4 pb-2 sm:pt-6 sm:pb-4 text-center text-xs text-muted-foreground/50 animate-fade-in bg-background/95 backdrop-blur-sm border-t border-border/20 relative">
           <p>Drag to reorder. Your tasks are stored locally. <span className="text-foreground font-bold">Stay productive!</span></p>
+          {/* Deployment link - now clearly visible */}
+          <a 
+            href="https://vercel.com/dhananjay-aggarwals-projects/warmup" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="absolute bottom-2 right-3 text-sm opacity-60 hover:opacity-100 transition-all duration-300 text-foreground bg-card/50 px-2 py-1 rounded-md hover:bg-card/80"
+            title="Vercel Dashboard"
+          >
+            ▲
+          </a>
         </footer>
 
         {/* Add task input (modal style) */}
