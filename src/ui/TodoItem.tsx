@@ -4,7 +4,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
 import { useWiggle } from './useWiggle';
 import { useTodos, TodoItem as Todo } from '../store/useTodos';
-import { CheckCircle2, Circle, GripVertical, Pencil, Trash2 } from 'lucide-react';
+import { useProductivity } from '../store/useProductivity';
+import { CheckCircle2, Circle, GripVertical, Pencil, Trash2, Clock, Play, Timer } from 'lucide-react';
 import { Button, Card, Input, TextArea, cn } from './components';
 
 interface Props {
@@ -19,14 +20,32 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
   };
 
   const { toggle, remove, update } = useTodos();
+  const { startPomodoro, currentPomodoro, trackTaskCompletion } = useProductivity();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [notes, setNotes] = useState(todo.notes || '');
+  const [estimatedMinutes, setEstimatedMinutes] = useState(todo.estimatedMinutes || 25);
 
   function handleSave() {
     if (!title.trim()) return;
-    update(todo.id, { title: title.trim(), notes: notes.trim() || undefined });
+    update(todo.id, { 
+      title: title.trim(), 
+      notes: notes.trim() || undefined,
+      estimatedMinutes: estimatedMinutes || undefined
+    });
     setEditing(false);
+  }
+
+  function handleToggle() {
+    toggle(todo.id);
+    if (!todo.done) {
+      // Track completion for productivity stats
+      trackTaskCompletion();
+    }
+  }
+
+  function handleStartPomodoro() {
+    startPomodoro(todo.id, estimatedMinutes || 25);
   }
 
   const wiggle = useWiggle({ active: isDragging });
@@ -66,7 +85,7 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
       >
         <div className="flex items-start gap-3">
           <button
-            onClick={() => toggle(todo.id)}
+            onClick={handleToggle}
             className={cn('mt-0.5 rounded-full transition hover:scale-110 focus-visible:ring-2 focus-visible:ring-foreground/40', todo.done ? 'text-success' : 'text-muted-foreground/60')}
             aria-label={todo.done ? 'Mark incomplete' : 'Mark complete'}
           >
@@ -83,6 +102,18 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add notes (optional)..."
                 />
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-muted-foreground" />
+                  <Input
+                    type="number"
+                    value={estimatedMinutes}
+                    onChange={(e) => setEstimatedMinutes(parseInt(e.target.value) || 25)}
+                    min={5}
+                    max={180}
+                    className="w-20"
+                  />
+                  <span className="text-sm text-muted-foreground">minutes</span>
+                </div>
                 <div className="flex gap-2 justify-end pt-1">
                   <Button size="sm" variant="subtle" onClick={() => setEditing(false)}>Cancel</Button>
                   <Button size="sm" onClick={handleSave}>Save</Button>
@@ -94,11 +125,40 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
                 {todo.notes && (
                   <p className="text-xs mt-1 text-muted-foreground/70 line-clamp-2">{todo.notes}</p>
                 )}
+                {todo.estimatedMinutes && (
+                  <div className="flex items-center gap-1 mt-1">
+                    <Clock size={12} className="text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      {todo.estimatedMinutes}m estimated
+                    </span>
+                    {todo.pomodoroSessions && (
+                      <span className="text-xs text-success ml-2">
+                        {todo.pomodoroSessions} 🍅
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
 
           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition ml-auto pl-2">
+            {!editing && !todo.done && (
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                onClick={handleStartPomodoro}
+                aria-label="Start Pomodoro" 
+                className="h-7 w-7 p-0 text-red-500 hover:text-red-500"
+                disabled={currentPomodoro?.taskId === todo.id}
+              >
+                {currentPomodoro?.taskId === todo.id ? (
+                  <Timer className="size-4 animate-pulse" />
+                ) : (
+                  <Play className="size-4" />
+                )}
+              </Button>
+            )}
             {!editing && (
               <Button size="sm" variant="ghost" onClick={() => setEditing(true)} aria-label="Edit" className="h-7 w-7 p-0"><Pencil className="size-4" /></Button>
             )}

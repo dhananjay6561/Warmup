@@ -9,8 +9,12 @@ export interface TodoItem {
   done: boolean;
   createdAt: number;
   updatedAt: number;
+  completedAt?: number;
   due?: string;
   priority: 'low' | 'medium' | 'high';
+  estimatedMinutes?: number;
+  actualMinutes?: number;
+  pomodoroSessions?: number;
 }
 
 interface TodoState {
@@ -35,7 +39,12 @@ export const useTodos = create<TodoState>()(persist((set) => ({
     ]
   })),
   toggle: (id) => set((s) => ({
-    todos: s.todos.map(t => t.id === id ? { ...t, done: !t.done, updatedAt: Date.now() } : t)
+    todos: s.todos.map(t => t.id === id ? { 
+      ...t, 
+      done: !t.done, 
+      updatedAt: Date.now(),
+      completedAt: !t.done ? Date.now() : undefined
+    } : t)
   })),
   update: (id, patch) => set((s) => ({
     todos: s.todos.map(t => t.id === id ? { ...t, ...patch, updatedAt: Date.now() } : t)

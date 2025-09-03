@@ -6,9 +6,12 @@ import { useTodos } from '../store/useTodos';
 import { Button, Card, EmptyState, Input, Fab, SettingsModal, DeviceBlockModal } from './components';
 import { TodoListItem, DragOverlayCard } from './TodoItem';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlusCircle, Trash2, Sparkles, Star, Settings2 } from 'lucide-react';
+import { PlusCircle, Trash2, Sparkles, Star, Settings2, Timer, BarChart3, Target } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import { BackgroundGradientAnimation } from './background-gradient-animation';
+import { PomodoroTimer } from './pomodoro-timer';
+import { ProgressDashboard } from './progress-dashboard';
+import { GoalsManager } from './goals-manager';
 
 export default function App() {
   const { todos, create, reorder, clearCompleted } = useTodos();
@@ -16,6 +19,7 @@ export default function App() {
   const [showInput, setShowInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [currentView, setCurrentView] = useState<'todos' | 'timer' | 'progress' | 'goals'>('todos');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -83,50 +87,124 @@ export default function App() {
             <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
           </header>
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="pb-24">
-              {todos.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-[50vh] animate-fade-in px-4">
-                  <h2 className="text-2xl font-bold mb-2 text-foreground/80 text-center">Welcome!</h2>
-                  <p className="text-muted-foreground/70 mb-6 text-center">Start by adding your first task.</p>
-                  <Button onClick={() => setShowInput(true)} variant="solid" size="lg" className="gap-2 animate-pop w-full max-w-xs">
-                    <PlusCircle size={20} /> Add Task
-                  </Button>
-                </div>
-              )}
-
-              {todos.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-4 md:px-8 gap-2 animate-fade-in">
-                  <div className="flex gap-2 items-center text-xs text-muted-foreground/70">
-                    <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-foreground/90 border border-border">{remaining} left</span>
-                    <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-muted-foreground border border-border">{completed} done</span>
-                  </div>
-                  {completed > 0 && (
-                    <Button variant="ghost" onClick={clearCompleted} className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground animate-pop">
-                      <Trash2 size={14} /> Clear {completed}
-                    </Button>
-                  )}
-                </div>
-              )}
-
-              <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
-                <SortableContext items={todos.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                  <ul className="space-y-4 px-2 sm:px-4 md:px-8 w-full max-w-3xl mx-auto">
-                    <AnimatePresence initial={false}>
-                      {todos.map(todo => (
-                        <TodoListItem key={todo.id} todo={todo} isDraggingActive={activeId === todo.id} />
-                      ))}
-                    </AnimatePresence>
-                  </ul>
-                </SortableContext>
-                <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(.34,1.56,.64,1)' }}>
-                  {activeId ? <DragOverlayCard todo={todos.find(t => t.id === activeId)!} /> : null}
-                </DragOverlay>
-              </DndContext>
+          {/* Navigation Tabs */}
+          <div className="px-4 md:px-8 mb-6">
+            <div className="flex gap-2 bg-card/80 p-1 rounded-lg border border-border/60 backdrop-blur-sm">
+              <button
+                onClick={() => setCurrentView('todos')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  currentView === 'todos'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                }`}
+              >
+                <PlusCircle size={16} />
+                Tasks
+              </button>
+              <button
+                onClick={() => setCurrentView('timer')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  currentView === 'timer'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                }`}
+              >
+                <Timer size={16} />
+                Timer
+              </button>
+              <button
+                onClick={() => setCurrentView('progress')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  currentView === 'progress'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                }`}
+              >
+                <BarChart3 size={16} />
+                Progress
+              </button>
+              <button
+                onClick={() => setCurrentView('goals')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  currentView === 'goals'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                }`}
+              >
+                <Target size={16} />
+                Goals
+              </button>
             </div>
           </div>
 
-          <Fab onClick={() => setShowInput(true)} icon={<PlusCircle size={32} />} label="Add Task" className="right-4 bottom-20 sm:right-8 sm:bottom-24" />
+          <div className="flex-1 overflow-y-auto">
+            <div className="pb-24">
+              {currentView === 'todos' && (
+                <>
+                  {todos.length === 0 && (
+                    <div className="flex flex-col items-center justify-center h-[50vh] animate-fade-in px-4">
+                      <h2 className="text-2xl font-bold mb-2 text-foreground/80 text-center">Welcome!</h2>
+                      <p className="text-muted-foreground/70 mb-6 text-center">Start by adding your first task.</p>
+                      <Button onClick={() => setShowInput(true)} variant="solid" size="lg" className="gap-2 animate-pop w-full max-w-xs">
+                        <PlusCircle size={20} /> Add Task
+                      </Button>
+                    </div>
+                  )}
+
+                  {todos.length > 0 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-4 md:px-8 gap-2 animate-fade-in">
+                      <div className="flex gap-2 items-center text-xs text-muted-foreground/70">
+                        <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-foreground/90 border border-border">{remaining} left</span>
+                        <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-muted-foreground border border-border">{completed} done</span>
+                      </div>
+                      {completed > 0 && (
+                        <Button variant="ghost" onClick={clearCompleted} className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground animate-pop">
+                          <Trash2 size={14} /> Clear {completed}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+                    <SortableContext items={todos.map(t => t.id)} strategy={verticalListSortingStrategy}>
+                      <ul className="space-y-4 px-2 sm:px-4 md:px-8 w-full max-w-3xl mx-auto">
+                        <AnimatePresence initial={false}>
+                          {todos.map(todo => (
+                            <TodoListItem key={todo.id} todo={todo} isDraggingActive={activeId === todo.id} />
+                          ))}
+                        </AnimatePresence>
+                      </ul>
+                    </SortableContext>
+                    <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(.34,1.56,.64,1)' }}>
+                      {activeId ? <DragOverlayCard todo={todos.find(t => t.id === activeId)!} /> : null}
+                    </DragOverlay>
+                  </DndContext>
+                </>
+              )}
+
+              {currentView === 'timer' && (
+                <div className="px-4 md:px-8">
+                  <PomodoroTimer />
+                </div>
+              )}
+
+              {currentView === 'progress' && (
+                <div className="px-4 md:px-8">
+                  <ProgressDashboard />
+                </div>
+              )}
+
+              {currentView === 'goals' && (
+                <div className="px-4 md:px-8">
+                  <GoalsManager />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {currentView === 'todos' && (
+            <Fab onClick={() => setShowInput(true)} icon={<PlusCircle size={32} />} label="Add Task" className="right-4 bottom-20 sm:right-8 sm:bottom-24" />
+          )}
         </main>
 
         <footer className="bg-muted/50 h-16 flex items-center justify-center relative border-t border-border/40">
