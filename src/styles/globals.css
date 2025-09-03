@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root { color-scheme: dark; }
+  * { @apply box-border; }
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-background text-foreground font-sans selection:bg-primary/30 selection:text-foreground;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  :focus-visible { outline: 2px solid theme('colors.primary.DEFAULT'); outline-offset: 2px; }
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: 
+    linear-gradient(120deg, #181A1B 0%, #232426 100%),
+    url('https://www.transparenttextures.com/patterns/diamond-upholstery.png'); /* subtle noise pattern */
+  opacity: 1;
+  pointer-events: none;
+  filter: blur(0.5px) brightness(1.02);
+  transition: background 0.5s;
+}
+
+@layer utilities {
+  .fade-in { animation: fadeIn 0.35s ease-out; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2d3642; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #3a4654; }
