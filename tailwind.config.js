@@ -1,6 +1,3 @@
-/**********************
- * Tailwind Config
- *********************/
 import { fontFamily } from 'tailwindcss/defaultTheme';
 
 export default {
@@ -12,14 +9,14 @@ export default {
         sans: ['"Plus Jakarta Sans"', ...fontFamily.sans],
       },
       colors: {
-        background: '#181A1B', // deep dark neutral
+        background: '#181A1B',
         foreground: '#F3F4F8',
         muted: {
           DEFAULT: '#232426',
           foreground: '#A0A4B8'
         },
         card: {
-          DEFAULT: '#232426cc', // glassy dark
+          DEFAULT: '#232426cc',
           foreground: '#F3F4F8'
         },
         accent: {
@@ -27,7 +24,7 @@ export default {
           foreground: '#F3F4F8'
         },
         primary: {
-          DEFAULT: '#222326', // neutral accent
+          DEFAULT: '#222326',
           foreground: '#fff'
         },
         secondary: {

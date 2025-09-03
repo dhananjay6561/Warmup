@@ -49,7 +49,6 @@ export default function App() {
     <>
       <DeviceBlockModal />
       <div className="w-full h-screen min-h-screen flex flex-col bg-background">
-        {/* Main content area with black background */}
         <main className="flex-1 w-full flex flex-col px-0 py-0 relative overflow-hidden">
           <header className="w-full flex items-center justify-between px-4 md:px-8 pt-6 md:pt-8 pb-3 md:pb-4">
             <div>
@@ -69,10 +68,8 @@ export default function App() {
             <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
           </header>
 
-          {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto">
-            <div className="pb-24"> {/* Add padding bottom to prevent footer overlap */}
-              {/* Onboarding/empty state */}
+            <div className="pb-24">
               {todos.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-[50vh] animate-fade-in px-4">
                   <h2 className="text-2xl font-bold mb-2 text-foreground/80 text-center">Welcome!</h2>
@@ -83,7 +80,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Stats bar */}
               {todos.length > 0 && (
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-4 md:px-8 gap-2 animate-fade-in">
                   <div className="flex gap-2 items-center text-xs text-muted-foreground/70">
@@ -98,7 +94,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Task list */}
               <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
                 <SortableContext items={todos.map(t => t.id)} strategy={verticalListSortingStrategy}>
                   <ul className="space-y-4 px-2 sm:px-4 md:px-8 w-full max-w-3xl mx-auto">
@@ -116,14 +111,10 @@ export default function App() {
             </div>
           </div>
 
-          {/* Floating Action Button */}
           <Fab onClick={() => setShowInput(true)} icon={<PlusCircle size={32} />} label="Add Task" className="right-4 bottom-20 sm:right-8 sm:bottom-24" />
         </main>
 
-        {/* Fixed footer with greyish background */}
-        <footer className="w-full pt-4 pb-2 sm:pt-6 sm:pb-4 text-center text-xs text-muted-foreground/50 animate-fade-in bg-background/95 backdrop-blur-sm border-t border-border/20 relative">
-          <p>Drag to reorder. Your tasks are stored locally. <span className="text-foreground font-bold">Stay productive!</span></p>
-          {/* Deployment link - now clearly visible */}
+        <footer className="bg-muted/50 h-16 flex items-center justify-center relative border-t border-border/40">
           <a 
             href="https://vercel.com/dhananjay-aggarwals-projects/warmup" 
             target="_blank" 
@@ -135,7 +126,6 @@ export default function App() {
           </a>
         </footer>
 
-        {/* Add task input (modal style) */}
         {showInput && (
           <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-2">
             <Card className="p-6 sm:p-8 w-full max-w-lg animate-pop relative border border-border/80">

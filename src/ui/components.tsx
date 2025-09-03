@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-// Modal that blocks on mobile/tablet
+
 export function DeviceBlockModal() {
   const [show, setShow] = useState(false);
   useEffect(() => {
     function check() {
-      // Show if width < 1024px (laptop breakpoint)
       setShow(window.innerWidth < 1024);
     }
     check();
@@ -22,7 +21,7 @@ export function DeviceBlockModal() {
     </div>
   );
 }
-// Glassy settings modal
+
 export function SettingsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [sound, setSound] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -69,7 +68,6 @@ export function cn(...classes: (string | undefined | null | false)[]) {
   return twMerge(classes.filter(Boolean).join(' '));
 }
 
-// Card shell
 export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { glow?: boolean }>(
   ({ className, glow, ...props }, ref) => (
     <div
@@ -106,7 +104,7 @@ const buttonStyles = cva(
     defaultVariants: { variant: 'solid', size: 'md' }
   }
 );
-// Floating Action Button (FAB)
+
 export function Fab({ onClick, icon, label, className }: { onClick: () => void; icon: React.ReactNode; label?: string; className?: string }) {
   return (
     <button

@@ -9,7 +9,7 @@ export interface TodoItem {
   done: boolean;
   createdAt: number;
   updatedAt: number;
-  due?: string; // ISO date
+  due?: string;
   priority: 'low' | 'medium' | 'high';
 }
 

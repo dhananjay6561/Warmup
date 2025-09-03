@@ -110,7 +110,7 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
         </div>
 
         <div className="flex gap-2 items-center justify-between text-[10px] uppercase tracking-wide text-muted-foreground/50">
-          <span>Created {new Date(todo.createdAt).toLocaleDateString()}</span>
+          <span>Created {new Date(todo.createdAt).toLocaleDateString()} at {new Date(todo.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
           {todo.done && <span className="text-success">Completed</span>}
         </div>
         {isDragging && <div className="absolute inset-0 border-2 border-foreground/20 rounded-2xl pointer-events-none animate-pulse" />}
