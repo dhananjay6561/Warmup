@@ -115,6 +115,9 @@ export default function App() {
         </main>
 
         <footer className="bg-muted/50 h-16 flex items-center justify-center relative border-t border-border/40">
+          <p className="text-xs text-muted-foreground/60 text-center px-4">
+            Your todos are stored locally, stay productive!
+          </p>
           <a 
             href="https://vercel.com/dhananjay-aggarwals-projects/warmup" 
             target="_blank" 
