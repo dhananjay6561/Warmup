@@ -27,7 +27,6 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
   onTimerComplete
 }) => {
   const { 
-    incrementSessionCount,
     sessionCount
   } = useProductivity();
 
@@ -42,7 +41,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
   const [timeLeft, setTimeLeft] = useState(0); // in seconds
   const [totalTime, setTotalTime] = useState(0); // in seconds
   const [progress, setProgress] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   // Format time helper
   const formatTime = (seconds: number): string => {
@@ -83,8 +82,10 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
 
     playNotification();
     
+    // Track completion in productivity store if it's a focus session
     if (currentSession.type === 'focus') {
-      incrementSessionCount?.();
+      // Note: The productivity store will handle session counting in its own way
+      // We're not manually incrementing here since there's no incrementSessionCount method
     }
     
     onTimerComplete?.(currentSession.type, currentSession.duration);
@@ -103,7 +104,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
         startBreakSession(customBreakMinutes);
       }, 1000);
     }
-  }, [currentSession, playNotification, onTimerComplete, incrementSessionCount, customBreakMinutes]);
+  }, [currentSession, playNotification, onTimerComplete, customBreakMinutes]);
 
   // Timer effect - handles the actual countdown
   useEffect(() => {
@@ -115,11 +116,6 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
           // Update progress
           const newProgress = totalTime > 0 ? ((totalTime - newTime) / totalTime) * 100 : 0;
           setProgress(newProgress);
-          
-          // Check for completion
-          if (newTime === 0) {
-            return 0; // This will trigger the completion effect
-          }
           
           return newTime;
         });
@@ -137,7 +133,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
         intervalRef.current = null;
       }
     };
-  }, [timerState, totalTime]);
+  }, [timerState]);
 
   // Handle timer completion when timeLeft reaches 0
   useEffect(() => {

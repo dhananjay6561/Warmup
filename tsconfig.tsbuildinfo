@@ -1,1 +1,1 @@
-{"root":["./src/declarations.d.ts","./src/main.tsx","./src/store/useTodos.ts","./src/ui/App.tsx","./src/ui/TodoItem.tsx","./src/ui/components.tsx","./src/ui/useWiggle.ts"],"version":"5.9.2"}
+{"root":["./src/declarations.d.ts","./src/main.tsx","./src/lib/utils.ts","./src/store/useProductivity.ts","./src/store/useTodos.ts","./src/ui/App.tsx","./src/ui/TodoItem.tsx","./src/ui/background-gradient-animation.tsx","./src/ui/components.tsx","./src/ui/goals-manager.tsx","./src/ui/pomodoro-timer.tsx","./src/ui/progress-dashboard.tsx","./src/ui/useWiggle.ts"],"version":"5.9.2"}
