@@ -8,6 +8,7 @@ import { TodoListItem, DragOverlayCard } from './TodoItem';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusCircle, Trash2, Sparkles, Star, Settings2 } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
+import { BackgroundGradientAnimation } from './background-gradient-animation';
 
 export default function App() {
   const { todos, create, reorder, clearCompleted } = useTodos();
@@ -48,7 +49,21 @@ export default function App() {
   return (
     <>
       <DeviceBlockModal />
-      <div className="w-full h-screen min-h-screen flex flex-col bg-background">
+      <BackgroundGradientAnimation 
+        gradientBackgroundStart="rgb(18, 18, 20)"
+        gradientBackgroundEnd="rgb(24, 26, 27)"
+        firstColor="46, 217, 141"
+        secondColor="255, 95, 95"
+        thirdColor="243, 244, 248"
+        fourthColor="162, 186, 255"
+        fifthColor="255, 204, 112"
+        pointerColor="243, 244, 248"
+        size="50%"
+        blendingValue="soft-light"
+        containerClassName="fixed inset-0 z-0 opacity-30"
+        interactive={true}
+      />
+      <div className="w-full h-screen min-h-screen flex flex-col bg-transparent relative z-10">
         <main className="flex-1 w-full flex flex-col px-0 py-0 relative overflow-hidden">
           <header className="w-full flex items-center justify-between px-4 md:px-8 pt-6 md:pt-8 pb-3 md:pb-4">
             <div>
