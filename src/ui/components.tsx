@@ -1,4 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+// Modal that blocks on mobile/tablet
+export function DeviceBlockModal() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    function check() {
+      // Show if width < 1024px (laptop breakpoint)
+      setShow(window.innerWidth < 1024);
+    }
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  if (!show) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 text-foreground animate-fade-in">
+      <div className="max-w-xs w-full bg-card/90 rounded-2xl shadow-glass p-8 text-center border border-border/80">
+        <div className="text-3xl mb-4">⚠️</div>
+        <h2 className="text-xl font-bold mb-2">Desktop Only</h2>
+        <p className="text-muted-foreground/80 mb-4">This app is designed for PC and desktop screens.<br />Please open on a larger device for the best experience.</p>
+      </div>
+    </div>
+  );
+}
 // Glassy settings modal
 export function SettingsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [sound, setSound] = useState(true);
@@ -84,11 +107,14 @@ const buttonStyles = cva(
   }
 );
 // Floating Action Button (FAB)
-export function Fab({ onClick, icon, label }: { onClick: () => void; icon: React.ReactNode; label?: string }) {
+export function Fab({ onClick, icon, label, className }: { onClick: () => void; icon: React.ReactNode; label?: string; className?: string }) {
   return (
     <button
       onClick={onClick}
-      className="fixed z-30 bottom-8 right-8 bg-card/80 text-foreground rounded-full shadow-glass border border-border/80 w-16 h-16 flex items-center justify-center text-3xl hover:scale-105 active:scale-95 transition-all duration-200 animate-pop group backdrop-blur-lg"
+      className={cn(
+        "fixed z-30 bottom-8 right-8 bg-card/80 text-foreground rounded-full shadow-glass border border-border/80 w-16 h-16 flex items-center justify-center text-3xl hover:scale-105 active:scale-95 transition-all duration-200 animate-pop group backdrop-blur-lg",
+        className
+      )}
       aria-label={label || 'Add'}
     >
       <span className="group-hover:animate-wiggle">{icon}</span>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, DragStartEvent, DragOverlay } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, PointerSensor, TouchSensor, useSensor, useSensors, DragStartEvent, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useTodos } from '../store/useTodos';
-import { Button, Card, EmptyState, Input, Fab, SettingsModal } from './components';
+import { Button, Card, EmptyState, Input, Fab, SettingsModal, DeviceBlockModal } from './components';
 import { TodoListItem, DragOverlayCard } from './TodoItem';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusCircle, Trash2, Sparkles, Star, Settings2 } from 'lucide-react';
@@ -16,7 +16,8 @@ export default function App() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
   );
 
   function handleAdd() {
@@ -43,9 +44,11 @@ export default function App() {
   const completed = todos.length - remaining;
 
   return (
-    <div className="w-full h-screen min-h-screen flex flex-col bg-background">
+    <>
+      <DeviceBlockModal />
+      <div className="w-full h-screen min-h-screen flex flex-col bg-background">
       <main className="flex-1 w-full h-full flex flex-col px-0 py-0 relative">
-        <header className="w-full flex items-center justify-between px-8 pt-8 pb-4">
+        <header className="w-full flex items-center justify-between px-4 md:px-8 pt-6 md:pt-8 pb-3 md:pb-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-2 animate-pop">
               <span className="inline-block w-3 h-3 rounded-full bg-success mr-2 animate-pulse" />
@@ -65,10 +68,10 @@ export default function App() {
 
         {/* Onboarding/empty state */}
         {todos.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-[60vh] animate-fade-in">
-            <h2 className="text-2xl font-bold mb-2 text-foreground/80">Welcome!</h2>
-            <p className="text-muted-foreground/70 mb-6">Start by adding your first task.</p>
-            <Button onClick={() => setShowInput(true)} variant="solid" size="lg" className="gap-2 animate-pop">
+          <div className="flex flex-col items-center justify-center h-[60vh] animate-fade-in px-4">
+            <h2 className="text-2xl font-bold mb-2 text-foreground/80 text-center">Welcome!</h2>
+            <p className="text-muted-foreground/70 mb-6 text-center">Start by adding your first task.</p>
+            <Button onClick={() => setShowInput(true)} variant="solid" size="lg" className="gap-2 animate-pop w-full max-w-xs">
               <PlusCircle size={20} /> Add Task
             </Button>
           </div>
@@ -76,7 +79,7 @@ export default function App() {
 
         {/* Stats bar */}
         {todos.length > 0 && (
-          <div className="flex items-center justify-between mb-6 px-8 animate-fade-in">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-4 md:px-8 gap-2 animate-fade-in">
             <div className="flex gap-2 items-center text-xs text-muted-foreground/70">
               <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-foreground/90 border border-border">{remaining} left</span>
               <span className="rounded-full bg-card/80 px-3 py-1 font-semibold text-muted-foreground border border-border">{completed} done</span>
@@ -91,8 +94,8 @@ export default function App() {
 
         {/* Add task input (modal style) */}
         {showInput && (
-          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
-            <Card className="p-8 w-full max-w-lg animate-pop relative border border-border/80">
+          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in px-2">
+            <Card className="p-6 sm:p-8 w-full max-w-lg animate-pop relative border border-border/80">
               <button className="absolute top-4 right-4 text-muted-foreground/60 hover:text-foreground text-2xl" onClick={() => setShowInput(false)} aria-label="Close">
                 ×
               </button>
@@ -116,7 +119,7 @@ export default function App() {
         {/* Task list */}
         <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={todos.map(t => t.id)} strategy={verticalListSortingStrategy}>
-            <ul className="space-y-6 px-8 w-full max-w-3xl mx-auto">
+            <ul className="space-y-4 px-2 sm:px-4 md:px-8 w-full max-w-3xl mx-auto">
               <AnimatePresence initial={false}>
                 {todos.map(todo => (
                   <TodoListItem key={todo.id} todo={todo} isDraggingActive={activeId === todo.id} />
@@ -130,12 +133,13 @@ export default function App() {
         </DndContext>
 
         {/* Floating Action Button */}
-        <Fab onClick={() => setShowInput(true)} icon={<PlusCircle size={32} />} label="Add Task" />
+  <Fab onClick={() => setShowInput(true)} icon={<PlusCircle size={32} />} label="Add Task" className="right-4 bottom-4 sm:right-8 sm:bottom-8" />
 
-        <footer className="pt-12 pb-4 text-center text-xs text-muted-foreground/50 animate-fade-in w-full">
+  <footer className="pt-8 pb-2 sm:pt-12 sm:pb-4 text-center text-xs text-muted-foreground/50 animate-fade-in w-full px-2">
           <p>Drag to reorder. Your tasks are stored locally. <span className="text-foreground font-bold">Stay productive!</span></p>
         </footer>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
