@@ -7,6 +7,7 @@ import { Button, Card, EmptyState, Input, Fab, SettingsModal, DeviceBlockModal }
 import { TodoListItem, DragOverlayCard } from './TodoItem';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusCircle, Trash2, Sparkles, Star, Settings2 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const { todos, create, reorder, clearCompleted } = useTodos();
@@ -158,6 +159,7 @@ export default function App() {
           </div>
         )}
       </div>
+      <Analytics />
     </>
   );
 }
