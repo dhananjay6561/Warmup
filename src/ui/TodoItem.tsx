@@ -77,7 +77,12 @@ export function TodoListItem({ todo, isDraggingActive }: Props & { isDraggingAct
             {editing ? (
               <div className="space-y-2">
                 <Input value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key==='Enter' && handleSave()} />
-                <TextArea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
+                <TextArea
+                  rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Add notes (optional)..."
+                />
                 <div className="flex gap-2 justify-end pt-1">
                   <Button size="sm" variant="subtle" onClick={() => setEditing(false)}>Cancel</Button>
                   <Button size="sm" onClick={handleSave}>Save</Button>
