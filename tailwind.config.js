@@ -70,7 +70,9 @@ export default {
         second: "moveInCircle 20s reverse infinite",
         third: "moveInCircle 40s linear infinite",
         fourth: "moveHorizontal 40s ease infinite",
-        fifth: "moveInCircle 20s ease infinite",
+  fifth: "moveInCircle 20s ease infinite",
+  'shine': 'shine 2.2s linear infinite',
+  'glow-pulse': 'glowPulse 3.5s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -128,6 +130,14 @@ export default {
             transform: "translateY(-50%)",
           },
         },
+        shine: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '200% 50%' }
+        },
+        glowPulse: {
+          '0%,100%': { boxShadow: '0 0 0 1px rgba(255,255,255,0.05), 0 4px 14px -4px rgba(255,255,255,0.12)' },
+          '50%': { boxShadow: '0 0 0 1px rgba(255,255,255,0.12), 0 4px 18px -2px rgba(255,255,255,0.20)' }
+        }
       }
     }
   },
