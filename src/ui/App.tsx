@@ -72,13 +72,14 @@ export default function App() {
           <header className="w-full flex items-center justify-between px-4 md:px-8 pt-6 md:pt-8 pb-3 md:pb-4 sticky top-0 z-30 backdrop-blur-lg bg-background/60 border-b border-white/5">
             <div className="relative w-full flex items-start justify-between">
               {/* Center Top Highlighted Motivation Line */}
-              <div className="absolute left-1/2 -translate-x-1/2 -top-4 md:-top-5 flex justify-center w-full select-none group">
+              <div className="absolute left-1/2 -translate-x-1/2 -top-4 md:-top-5 flex flex-col items-center w-full select-none group">
                 <span className="relative px-7 py-2.5 rounded-full bg-card/90 backdrop-blur-xl border border-white/10 text-lg md:text-2xl font-semibold tracking-wide md:tracking-widest text-foreground shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_6px_16px_-2px_rgba(0,0,0,0.55),0_10px_36px_-6px_rgba(0,0,0,0.65)] animate-fade-in whitespace-nowrap [text-shadow:0_2px_10px_rgba(255,255,255,0.22)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_6px_22px_-2px_rgba(0,0,0,0.5),0_14px_44px_-6px_rgba(0,0,0,0.7)] group-hover:scale-[1.05] group-hover:bg-card">
                   <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 animate-shine bg-[length:200%_100%]" />
                   <span className="absolute -inset-px rounded-full pointer-events-none border border-white/5 group-hover:border-white/15" />
                   <span className="relative pr-1">Be thankful to everything you have, and hope for the best</span>
                   <span className="ml-1 text-success/80 group-hover:text-success">✦</span>
                 </span>
+                <span className="mt-1 text-xs md:text-sm text-muted-foreground/70 font-medium italic tracking-wide">– Sanchit Thareja</span>
               </div>
               <div>
               <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-2 animate-pop">
