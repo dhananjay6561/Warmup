@@ -12,6 +12,7 @@ import { BackgroundGradientAnimation } from './background-gradient-animation';
 import { PomodoroTimer } from './pomodoro-timer';
 import { ProgressDashboard } from './progress-dashboard';
 import { GoalsManager } from './goals-manager';
+import DSASheet from './dsa-sheet/DSASheet';
 
 export default function App() {
   const { todos, create, reorder, clearCompleted } = useTodos();
@@ -19,7 +20,7 @@ export default function App() {
   const [showInput, setShowInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [currentView, setCurrentView] = useState<'todos' | 'timer' | 'progress' | 'goals'>('todos');
+  const [currentView, setCurrentView] = useState<'todos' | 'timer' | 'progress' | 'goals' | 'dsa'>('todos');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -148,6 +149,17 @@ export default function App() {
                 <Target size={16} />
                 Goals
               </button>
+              <button
+                onClick={() => setCurrentView('dsa')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  currentView === 'dsa'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                }`}
+              >
+                <Sparkles size={16} />
+                DSA Sheet
+              </button>
             </div>
           </div>
 
@@ -211,6 +223,11 @@ export default function App() {
               {currentView === 'goals' && (
                 <div className="px-4 md:px-8">
                   <GoalsManager />
+                </div>
+              )}
+              {currentView === 'dsa' && (
+                <div className="px-4 md:px-8">
+                  <DSASheet />
                 </div>
               )}
             </div>
