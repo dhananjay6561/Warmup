@@ -36,7 +36,7 @@ export function PlaylistsManager() {
           <Button disabled={!url.trim() || adding} onClick={handleAdd} className="gap-2 w-fit" size="sm">
             {adding && <Loader2 className="size-4 animate-spin" />} <Plus className="size-4" /> Add Playlist
           </Button>
-          <p className="text-[10px] text-muted-foreground/50 flex items-center gap-1"><Key className="size-3" /> API key baked into build env (VITE_YT_API_KEY).</p>
+         
         </div>
       </Card>
 
