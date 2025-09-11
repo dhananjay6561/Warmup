@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { DndContext, DragEndEvent, PointerSensor, TouchSensor, useSensor, useSensors, DragStartEvent, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -15,16 +16,31 @@ import { GoalsManager } from './goals-manager';
 import DSASheet from './dsa-sheet/DSASheet';
 import { PlaylistsManager } from './playlists-manager';
 import PlaylistTrackerPage from './playlist-tracker-page';
-import { Routes, Route, useNavigate } from 'react-router-dom';
 
 export default function App() {
+
   const { todos, create, reorder, clearCompleted } = useTodos();
   const [title, setTitle] = useState('');
   const [showInput, setShowInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [currentView, setCurrentView] = useState<'todos' | 'timer' | 'progress' | 'goals' | 'dsa' | 'playlists'>('todos');
-  const navigate = useNavigate();
+  const [currentView, setCurrentView] = useState<'todos' | 'timer' | 'progress' | 'goals' | 'dsa' | 'playlists'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cute-todo-last-tab');
+      if (saved === 'todos' || saved === 'timer' || saved === 'progress' || saved === 'goals' || saved === 'dsa' || saved === 'playlists') {
+        return saved;
+      }
+    }
+    return 'todos';
+  });
+  // const navigate = useNavigate(); // Removed, not used
+
+  // Persist tab on change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cute-todo-last-tab', currentView);
+    }
+  }, [currentView]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -234,7 +250,7 @@ export default function App() {
 
                     {currentView === 'progress' && (
                       <div className="px-4 md:px-8">
-                        <ProgressDashboard />
+                                // const navigate = useNavigate(); // Removed, not used
                       </div>
                     )}
 
