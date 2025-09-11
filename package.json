@@ -23,6 +23,7 @@
     "nanoid": "^5.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.30.1",
     "tailwind-merge": "^2.6.0",
     "zustand": "^4.5.2"
   },

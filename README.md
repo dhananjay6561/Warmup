@@ -12,6 +12,10 @@ A delightful dark-themed to-do app (not jet black) built with Vite + React + Typ
 - Clear completed
 - Keyboard: Enter to add / save
 - Accessible focus states
+- Pomodoro timer + productivity stats & goals
+- DSA Sheet view
+- NEW: YouTube Playlist Study Boards (paste a playlist URL + API key to turn videos into trackable watched / revisit checklist)
+	- Configure your YouTube Data API key via environment variable: create a `.env` with `VITE_YT_API_KEY=YOUR_KEY` (the UI does not prompt the end-user for it).
 
 ## Getting Started
 Install deps then run dev server.
