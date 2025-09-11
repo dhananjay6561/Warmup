@@ -32,7 +32,7 @@ export default function PlaylistTrackerPage() {
   }, [pl]);
 
   // Safe external link opener with error handling
-  const openLink = useCallback((url) => {
+  const openLink = useCallback((url: string) => {
     try {
       window.open(url, '_blank', 'noopener,noreferrer');
     } catch (error) {
@@ -49,7 +49,7 @@ export default function PlaylistTrackerPage() {
       refreshingRef.current = true;
       
       // Store current progress before refresh
-      const currentProgress = {};
+      const currentProgress: Record<string, { done: boolean; revisit: boolean }> = {};
       pl.order.forEach(vidId => {
         const video = pl.videos[vidId];
         if (video && (video.done || video.revisit)) {
@@ -70,10 +70,10 @@ export default function PlaylistTrackerPage() {
           if (mountedRef.current) {
             Object.keys(currentProgress).forEach(vidId => {
               if (currentProgress[vidId].done) {
-                toggleVideoField(pl.id, vidId, 'done', true);
+                toggleVideoField(pl.id, vidId, 'done');
               }
               if (currentProgress[vidId].revisit) {
-                toggleVideoField(pl.id, vidId, 'revisit', true);
+                toggleVideoField(pl.id, vidId, 'revisit');
               }
             });
           }
@@ -88,9 +88,9 @@ export default function PlaylistTrackerPage() {
   }, [pl, refetchPlaylist, toggleVideoField]);
 
   // Safe video field toggle
-  const handleToggleVideoField = useCallback((playlistId, videoId, field, value) => {
+  const handleToggleVideoField = useCallback((playlistId: string, videoId: string, field: 'done' | 'revisit') => {
     try {
-      toggleVideoField(playlistId, videoId, field, value);
+      toggleVideoField(playlistId, videoId, field);
     } catch (error) {
       console.error('Failed to toggle video field:', error);
     }
@@ -280,33 +280,33 @@ export default function PlaylistTrackerPage() {
                   {/* Action Buttons */}
                   <div className="flex flex-col sm:flex-row items-center gap-2 flex-shrink-0">
                     {/* Mark as Done */}
-                    <button
+                    <button 
                       onClick={() => handleToggleVideoField(pl.id, v.id, 'done')}
                       className={cn(
-                        'p-2.5 rounded-lg transition-all hover:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-success/50',
+                        "p-2.5 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50",
                         v.done 
-                          ? 'text-success hover:text-success/80 bg-success/10' 
-                          : 'text-muted-foreground/60 hover:text-success'
+                          ? "text-success bg-success/10 hover:bg-success/20" 
+                          : "text-muted-foreground/60 hover:text-success hover:bg-success/5"
                       )}
-                      title={v.done ? "Mark as not completed" : "Mark as completed"}
-                      aria-label={v.done ? "Mark as not completed" : "Mark as completed"}
+                      title={v.done ? "Mark as not done" : "Mark as done"}
+                      aria-label={v.done ? "Mark as not done" : "Mark as done"}
                     >
-                      {v.done ? <CheckSquare className="size-5" /> : <Square className="size-5" />}
+                      {v.done ? <CheckSquare className="size-4" /> : <Square className="size-4" />}
                     </button>
 
                     {/* Mark for Revisit */}
-                    <button
+                    <button 
                       onClick={() => handleToggleVideoField(pl.id, v.id, 'revisit')}
                       className={cn(
-                        'p-2.5 rounded-lg transition-all hover:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-warning/50',
+                        "p-2.5 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50",
                         v.revisit 
-                          ? 'text-warning hover:text-warning/80 bg-warning/10' 
-                          : 'text-muted-foreground/60 hover:text-warning'
+                          ? "text-warning bg-warning/10 hover:bg-warning/20" 
+                          : "text-muted-foreground/60 hover:text-warning hover:bg-warning/5"
                       )}
-                      title={v.revisit ? "Remove from revisit list" : "Mark to revisit later"}
-                      aria-label={v.revisit ? "Remove from revisit list" : "Mark to revisit later"}
+                      title={v.revisit ? "Remove from revisit list" : "Mark for revisit"}
+                      aria-label={v.revisit ? "Remove from revisit list" : "Mark for revisit"}
                     >
-                      {v.revisit ? <Bookmark className="size-5" /> : <BookmarkPlus className="size-5" />}
+                      {v.revisit ? <Bookmark className="size-4" /> : <BookmarkPlus className="size-4" />}
                     </button>
 
                     {/* Open Video */}
