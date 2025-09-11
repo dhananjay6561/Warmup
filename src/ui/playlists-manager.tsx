@@ -29,7 +29,7 @@ export function PlaylistsManager() {
     <div className="w-full max-w-6xl mx-auto space-y-8 pb-24">
       <Card className="p-6 space-y-4">
         <div className="flex items-center gap-2 text-foreground/90 font-semibold text-lg"><Youtube className="size-5 text-red-500" /> Playlist Study Boards</div>
-        <p className="text-sm text-muted-foreground/70 leading-relaxed">Paste a YouTube playlist URL (or ID). Videos will turn into a trackable list with two checkboxes: <strong className="text-foreground/80">Watched</strong> and <strong className="text-foreground/80">Revisit</strong>. API key is configured by the developer (not asked from user).</p>
+        <p className="text-sm text-muted-foreground/70 leading-relaxed">Paste a YouTube playlist URL (or ID). Videos will turn into a trackable list with two checkboxes: <strong className="text-foreground/80">Watched</strong> and <strong className="text-foreground/80">Revisit</strong>.</p>
         <div className="flex flex-col gap-3 max-w-xl">
           <Input placeholder="YouTube Playlist URL or ID" value={url} onChange={(e) => setUrl(e.target.value)} onKeyDown={(e) => e.key==='Enter' && handleAdd()} />
           {errorMsg && <p className="text-xs text-danger">{errorMsg}</p>}
